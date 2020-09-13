@@ -11,4 +11,16 @@ public class DemoController {
 		
 		return "home";
 	}
+	
+	@GetMapping("/manager")
+	public String showManger() {
+		
+		return "manager";
+	}
+	
+	@GetMapping("/system")
+	public String showSystem() {
+		
+		return "system";
+	}
 }

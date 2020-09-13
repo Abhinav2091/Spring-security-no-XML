@@ -39,9 +39,17 @@
 				<div style="padding-top: 30px" class="panel-body">
 
 					<!-- Login Form -->
+					<!-- Spring form add crsf token automatically if we are not using form of Spring we need to manually add it -->
+
 					<form:form
-						action="${pageContext.request.contextPath}/authenticateTheUser"
+ 						action="${pageContext.request.contextPath}/authenticateTheUser"
 						method="POST" class="form-horizontal">
+<%-- 						<form --%>
+<%-- 						action="${pageContext.request.contextPath}/authenticateTheUser" --%>
+<%-- 						method="POST" class="form-horizontal"> --%>
+						
+						<!-- Manually adding csrf token -->
+						<input type ="hidden" name ="${_csrf.parameterName}" value="${_csrf.token}">
 
 						<!-- Place for messages: error, alert etc ... -->
 						<div class="form-group">
@@ -88,9 +96,11 @@
 								<button type="submit" class="btn btn-success">Login</button>
 							</div>
 						</div>
+						
+						
 
 					</form:form>
-
+<%-- </form> --%>
 				</div>
 
 			</div>

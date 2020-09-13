@@ -17,9 +17,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// add our user for in memory Authentication
 
 		UserBuilder users = User.withDefaultPasswordEncoder();
-		auth.inMemoryAuthentication().withUser(users.username("Abhinav").password("root").roles("ADMIN"))
+		auth.inMemoryAuthentication().withUser(users.username("Abhinav").password("root").roles("EMPLOYEE","ADMIN"))
 				.withUser(users.username("Aju").password("root").roles("EMPLOYEE"))
-				.withUser(users.username("Himanshu").password("root").roles("MANAGER"));
+				.withUser(users.username("Himanshu").password("root").roles("EMPLOYEE","MANAGER"));
 	}
 
 	// override the configure http method for custom login form.
@@ -28,9 +28,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		//showMyLoginPage plain login page
 		//showMyFancyLoginPage fancy login page.
-		http.authorizeRequests().anyRequest().authenticated().and().formLogin().loginPage("/showMyFancyLoginPage")//my loginiN page
-				.loginProcessingUrl("/authenticateTheUser").permitAll()//check user name and pass provided by Spring.
-				.and().logout().permitAll();//adding log out support
+		//anyRequest will allow any one who is authenticated without authorization
+		/*
+		 * http.authorizeRequests().anyRequest().authenticated().and().formLogin().
+		 * loginPage("/showMyFancyLoginPage")//my loginiN page
+		 * .loginProcessingUrl("/authenticateTheUser").permitAll()//check user name and
+		 * pass provided by Spring. .and().logout().permitAll();//adding log out support
+		 */	
+		
+		//now we will authorised on basis of roles
+		 http.authorizeRequests()
+		 .antMatchers("/").hasAnyRole("EMPLOYEE","ADMIN","MANAGER")
+		 .antMatchers("/manager/**").hasRole("MANAGER")
+		 .antMatchers("/system/**").hasRole("ADMIN")
+		 .and().formLogin().
+		  loginPage("/showMyFancyLoginPage")//my loginiN page
+		  .loginProcessingUrl("/authenticateTheUser").permitAll()//check user name and pass provided by Spring. 
+		  .and().logout().permitAll()//adding log out support
+		  .and().exceptionHandling().accessDeniedPage("/access_denied");//custom access denied page
+		 
+		
+		
+	
 	}
 
 }
